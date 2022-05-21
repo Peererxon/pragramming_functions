@@ -2,6 +2,7 @@
 
 # Import the functions from the Draw 2-D library
 # so that they can be used in this program.
+import math
 import random
 from turtle import color, width
 from draw2d import \
@@ -31,8 +32,12 @@ def draw_sky(canvas, scene_width, scene_height):
     draw_rectangle(canvas, 0, scene_height / 3,
         scene_width, scene_height, width=0, fill="sky blue")
     
-    draw_clouds( canvas, 50, 350, 250, 500 )
-    draw_clouds( canvas, 380, 750, 250, 500 )
+    draw_clouds( canvas, 50, 350, 250, 480 )
+    draw_clouds( canvas, 50, 350, 250, 480 )
+
+    draw_clouds( canvas, 380, 350, 500, 480 )
+    draw_clouds( canvas, 380, 350, 500, 480 )
+
     draw_sun(canvas, scene_width, 80)
 
 def draw_clouds( canvas, min_x, min_y, max_x, max_y ):
@@ -50,28 +55,33 @@ def draw_clouds( canvas, min_x, min_y, max_x, max_y ):
 
 def draw_ground(canvas, scene_width, scene_height):
     """Draw the ground and all the objects on the ground."""
+    peak_y_ground = scene_height / 3
     draw_rectangle(canvas, 0, 0,
-        scene_width, scene_height / 3, width=0, fill="tan4")
+        scene_width, peak_y_ground, width=0, fill="tan4")
 
-    # Draw a pine tree.
-    tree_bottom = 100
-    tree_height = 200
-    tree_center_x = random.randint(0 + tree_height /10, 170)
-    draw_pine_tree(canvas, tree_center_x,
-            tree_bottom, tree_height)
-
-    # Draw another pine tree.
-    tree_center_x = 90
-    tree_bottom = 70
-    tree_height = 220
-    draw_pine_tree(canvas, tree_center_x,
-            tree_bottom, tree_height)
+    draw_grass(canvas, scene_width, peak_y_ground )
+    draw_trees(canvas, scene_width, peak_y_ground )
 
     house_width = 200
     house_height = 250
     x_house = random.randint(house_width, scene_width - house_width)
-    draw_house( canvas, x_house, scene_height / 3 , house_width,house_height, color='darkSalmon'  )
+    draw_house( canvas, x_house, peak_y_ground , house_width,house_height, color='darkSalmon'  )
 
+def draw_grass( canvas, scene_width,max_top, ):
+    for x in range(1600):
+        random_x = random.randint( 3, scene_width - 3 )
+        
+        random_y = random.randint( 0, math.ceil(max_top) )
+        draw_rectangle( canvas, random_x, random_y, random_x + 3, random_y + 30, fill='forestGreen', width=0.1 )
+
+def draw_trees( canvas, scene_width, max_top):
+    """ Draw tres inside of the limit of the scene with random values """
+    for x in range( 20 ):
+        tree_height = random.randint( 80, 150 )
+        tree_center_x = random.randint(0 + math.ceil( tree_height / 10 ) , scene_width - math.ceil( tree_height / 10 ) )
+        tree_bottom = random.randint( 0, math.ceil(max_top) )
+        draw_pine_tree(canvas, tree_center_x,
+                tree_bottom, tree_height)
 
 def draw_pine_tree(canvas, center_x, bottom, height):
     """Draw a single pine tree.
