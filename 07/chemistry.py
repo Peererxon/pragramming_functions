@@ -108,7 +108,7 @@ def main():
     chemical_formula = input('chemical formula: ')
     formula_parsed = parse_formula( chemical_formula, periodict_table )
     molar_mass = compute_molar_mass( formula_parsed, periodict_table )
-    print(molar_mass)
+    print(f'{molar_mass} grams/mole')
     """     periodict_table = make_periodic_table()
     #Defining the pieces of the list
     simbol = 0
@@ -229,10 +229,12 @@ QUANTITY_INDEX = 1
 def compute_molar_mass(symbol_quantity_list, periodic_table_dict):
     total_molar_mass = 0
     for symbol_list in symbol_quantity_list:
-        [symbol, quantity] = symbol_list
+        # in order to dont use magic number/positions we instead use the declared INDEX for each type of data
+        #[symbol, quantity] = symbol_list
+        symbol = symbol_list[SYMBOL_INDEX]
+        quantity = symbol_list[QUANTITY_INDEX]
         table_element = periodic_table_dict[symbol]
-        print(table_element[ATOMIC_MASS_INDEX])
-        print(quantity)
+        #print(table_element[ATOMIC_MASS_INDEX])
         total_molar_mass+= table_element[ATOMIC_MASS_INDEX] * quantity
         #print(periodic_table_dict[symbol])
     """Compute and return the total molar mass of all the
