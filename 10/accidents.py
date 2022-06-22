@@ -19,16 +19,20 @@ FATIGUE_COLUMN = 9
 def main():
     # Prompt the user for a filename and open that text file.
     filename = input("Name of file that contains NHTSA data: ")
+    perc_reduc = None
     try:
         with open(filename, "rt") as text_file:
             # Prompt the user for a percentage.
             try:
-                perc_reduc = float(input(
-                    "Percent reduction of texting while driving [0, 100]: "))
-                if perc_reduc < 0:
-                    print(f'Error: {perc_reduc} is too low. Please enter a different number.')
-                elif perc_reduc > 100:
-                    print(f'Error: {perc_reduc} is too high. Please enter a different number.')
+                while perc_reduc == None:
+                    perc_reduc = float(input(
+                        "Percent reduction of texting while driving [0, 100]: "))
+                    if perc_reduc < 0:
+                        print(f'Error: {perc_reduc} is too low. Please enter a different number.')
+                        perc_reduc = None
+                    elif perc_reduc > 100:
+                        print(f'Error: {perc_reduc} is too high. Please enter a different number.')
+                        perc_reduc = None
                 else:
                     print()
                     print(f"With a {perc_reduc}% reduction in using a cell",
@@ -40,7 +44,7 @@ def main():
 
                     # Use the csv module to create a reader
                     # object that will read from the opened file.
-                    
+
                     reader = csv.reader(text_file)
 
                     # The first line of the CSV file contains column headings
