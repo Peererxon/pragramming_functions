@@ -1,24 +1,51 @@
 import csv
+from datetime import datetime
+from time import time
 
 
 def main():
-    products_dict = read_dict('products.csv',0)
-    print(f'Products {products_dict}')
+    try:
+        products_dict = read_dict('products.csv', 0)
+        #print(f'Products {products_dict}')
+        items_price = []
+        items_number = 0
+        subtotal = 0
+        sales_tax = 0.06
+        sales_tax_amount = 0
+        total = 0
+        with open('request.csv', 'rt') as request_csv:
+            PRODUCT_INDEX = 0
+            NUMBER_OF_PRODUCTS = 1
+            reader = csv.reader(request_csv)
+            next(reader)
+            print('Requested Items')
+            print()
+            for row in reader:
+                product_id = row[PRODUCT_INDEX]
+                quantity_product = int(row[NUMBER_OF_PRODUCTS])
+                # find the product in the dictionary by the id of the products
+                dictionary_product = products_dict[product_id]
+                [id, name, price] = dictionary_product
+                price = float(price)
+                items_price.append(price * quantity_product)
+                # adding each total peer item [ 5$ * 4 ]
+                print(f'{name}: {quantity_product} @ {price}')
 
-    with open( 'request.csv', 'rt' ) as request_csv:
-        PRODUCT_INDEX = 0
-        NUMBER_OF_PRODUCTS = 1
-        reader = csv.reader(request_csv)
-        next(reader)
-        print('Requested Items')
-        print()
-        for row in reader:
-            product_id = row[PRODUCT_INDEX]
-            quantity_product = int(row[NUMBER_OF_PRODUCTS])
-            #find the product in the dictionary by the id of the products
-            dictionary_product = products_dict[product_id]
-            [ id,name,price ] = dictionary_product
-            print(f'{name}: {quantity_product} @ {price}')
+            items_number = len(items_price)
+            subtotal = round(sum(items_price), 2)
+            sales_tax_amount = round(subtotal * sales_tax, 2)
+            total = subtotal + sales_tax_amount
+            print_final_message(items_number, subtotal,
+                                sales_tax_amount, total)
+
+    except (FileNotFoundError, PermissionError) as err:
+        print('file not found or you have not permission to watch it')
+        print(err)
+    except KeyError as err:
+        print('Error: unknown product ID in the request.csv file')
+        print(err)
+
+
 def read_dict(filename, key_column_index):
     """Read the contents of a CSV file into a compound
     dictionary and return the dictionary.
@@ -39,5 +66,31 @@ def read_dict(filename, key_column_index):
             key_value = row[key_column_index]
             dictionary[key_value] = row
     return dictionary
+
+
+def print_final_message(n_items, sub, sal_tax, total):
+    """ print the bottom of the recip
+
+    Parameters:
+        n_items: Total number of items
+        sub: subtotal price
+        sal_tax: sales taxes amount
+        total: total of all the prices
+
+     """
+    print()
+    print('Thanks for bought here!')
+    print('##############################################')
+    print(f'Number of Items: {n_items}')
+    print(f'Subtotal: {sub}')
+    print(f'Sales Tax: {sal_tax}')
+    print(f'Total: {total}')
+    print('Thank you for shopping at the Inkom Emporium.')
+    current_date_and_time = datetime.now(tz=None)
+    print(datetime.now())
+    print(f"{current_date_and_time:%A %I:%M %p}")
+    print('##############################################')
+
+
 if __name__ == '__main__':
     main()
