@@ -4,8 +4,9 @@ from time import time
 
 
 def main():
+    INDEX_ITEM_ID = 0
     try:
-        products_dict = read_dict('products.csv', 0)
+        products_dict = read_dict('products.csv', INDEX_ITEM_ID)
         #print(f'Products {products_dict}')
         items_price = []
         items_number = 0
@@ -23,15 +24,19 @@ def main():
             for row in reader:
                 product_id = row[PRODUCT_INDEX]
                 quantity_product = int(row[NUMBER_OF_PRODUCTS])
+
+                # sum the numbers of items that the user wants to buy
+                items_number += quantity_product
+
                 # find the product in the dictionary by the id of the products
                 dictionary_product = products_dict[product_id]
+                
                 [id, name, price] = dictionary_product
                 price = float(price)
-                items_price.append(price * quantity_product)
                 # adding each total peer item [ 5$ * 4 ]
+                items_price.append(price * quantity_product)
                 print(f'{name}: {quantity_product} @ {price}')
 
-            items_number = len(items_price)
             subtotal = round(sum(items_price), 2)
             sales_tax_amount = round(subtotal * sales_tax, 2)
             total = subtotal + sales_tax_amount
@@ -87,8 +92,8 @@ def print_final_message(n_items, sub, sal_tax, total):
     print(f'Total: {total}')
     print('Thank you for shopping at the Inkom Emporium.')
     current_date_and_time = datetime.now(tz=None)
-    print(datetime.now())
-    print(f"{current_date_and_time:%A %I:%M %p}")
+    #print(f"{current_date_and_time:%a %b %d %H:%M:%S %Y}")
+    print(f'{current_date_and_time:%c}')
     print('##############################################')
 
 
