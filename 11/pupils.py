@@ -47,14 +47,16 @@ def print_list(list):
         print(item)
 
 
+def sort_by_birthdate(students_list):
+    extract_birthdate = lambda students_list : students_list[BIRTHDATE_INDEX]
+    return sorted( students_list, key=extract_birthdate)
+
 def main():
     students_list = read_compound_list('pupils.csv')
     #print_list(students_list)
 
-    extract_birthdate = lambda students_list : students_list[BIRTHDATE_INDEX]
-
-    student_list_sorted = sorted( students_list, key=extract_birthdate)
     print('Ordered from Oldest to Youngest')
+    student_list_sorted = sort_by_birthdate(students_list)
     print_list(student_list_sorted)
 
 
