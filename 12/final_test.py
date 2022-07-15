@@ -1,3 +1,5 @@
+from logging import raiseExceptions
+from math import ceil
 import pandas as pd
 import matplotlib.pyplot as plt  # interface
 from natsort import index_natsorted
@@ -9,7 +11,7 @@ COLUMN_3 = 'date'
 
 def main():
     exit = False
-
+    valid_option = False
     while not exit:
         print()
         print('Welcome! This is a glucose level program that will help you to visualice your glucose tracks.')
@@ -20,17 +22,35 @@ def main():
 
         try:
             answer = int(input('Pick your visual approach: '))
+
             if answer == 1:
                 csv = open_file('glucose_level.xlsx', 'glucose_level')
                 print_plot(csv)
-                exit = True
+                valid_option = True
             elif answer == 2:
                 csv = open_file('glucose_level.xlsx', 'glucose_level')
                 show_full_data(csv)
-                exit = True
+                valid_option = True
             else:
                 print_wrong_answer()
+
+            if valid_option:
+                answer = input(
+                    'Would you like to see your data in a different way? yes/no: ')
+                answer = answer.lower()
+                if answer == 'yes':
+                    exit = False
+                elif answer == 'no':
+                    print('Thanks for tried our program!')
+                    program_rate = evaluate_program()
+                    print(
+                        f'For you our program is rated at {program_rate} starts. Thanks')
+                    exit = True
+                else:
+                    exit = False
+                    print_wrong_answer()
         except ValueError as val_err:
+            print(val_err)
             print_wrong_answer()
 
 
@@ -56,26 +76,8 @@ def open_file(filename, sheet_name):
 
 def print_plot(csv: pd.DataFrame):
 
-    def split_dates(militar_time):
-        print(militar_time)
-        list_mapped = map(lambda column: [[column[0]], [
-                          column[1]].strftime("%H%M%S")], militar_time)
-        return list_mapped
-        try:
-            """             [hour, minutes] = militar_time.split(':')
-            full_time = int(hour) + int(minutes)
-            print(full_time) """
-            print(int(militar_time.strftime("%H%M%S")))
-            
-            # return int(militar_time.strftime("%Y%m%d%H%M%S"))
-
-        except ValueError as val_err:
-            print(
-                'please fill your xls with valid data in militar time EX:[17:15:59]')
-            print(val_err)
-
-    csv.sort_values(by='time', key=lambda col: split_dates(col))
-    csv.plot(x='time', y=['glucose level'], kind='bar')
+    csv_sorted = csv.sort_values(by='time')
+    csv_sorted.plot(x='time', y=['glucose level'], kind='bar')
     plt.show()
 
 
@@ -84,8 +86,40 @@ def show_full_data(csv: pd.DataFrame):
 
 
 def print_wrong_answer():
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     print('Please choose a valid option :( ...')
     print('Restarting program....')
+    print()
+
+
+def calculate_average(satisfaction, enjoy, competitive):
+    try:
+        avg = (satisfaction + enjoy + competitive) / 3
+        avg = round(avg, 2)
+        return avg
+
+    except TypeError as val_err:
+        print(val_err)
+        raise TypeError('Arguments are not numbers')
+
+
+def evaluate_program():
+    print('We are going to ask you a couple of question in order that you can evaluate our program :)')
+    sat = int(input(
+        'From 1 to 5 how much to you feel satisfied using our program?: '))
+    enj = int(input('From 1 to 5 how much do you enjoyed our program?: '))
+    comp = int(input(
+        'From 1 to 5 how much do you think our program is competitive?: '))
+    try:
+
+        if (sat > 5 or enj > 5 or comp > 5) or (sat < 1 or enj < 1 or comp < 1):
+            raise ValueError('ERROR: Values has to be between 1 and 5 ')
+        average_points = calculate_average(sat, enj, comp)
+        return average_points
+    except ValueError as val_err:
+        print()
+        print(val_err)
+        print_wrong_answer()
 
 
 if __name__ == "__main__":
