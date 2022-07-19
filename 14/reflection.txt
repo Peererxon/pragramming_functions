@@ -1,0 +1,23 @@
+Please respond thoroughly (at least two sentences for each question) to
+the following three questions.
+
+1. Describe an experience you had this semester where you saw the power of
+functions.
+
+
+In all the course I saw the power of functions by using them in different scenarios and when I sort a list in my project using a function help me a lot and the final results aren´t complicated.
+
+
+2. In your judgment, what is the value of test functions?
+
+As a developer is normal to make mistakes and testing our functions allows us to avoid common mistakes and see if the code is working as expected.
+And this saves us a bunch of time and effort in the long term.
+
+3. Describe your process for troubleshooting and fixing a program that
+has a problem. What is one thing you can do to improve your process?
+
+Most of the time I use the print to see the values of the variables before and after the statement. 
+if things get complicated I use the debugger.
+
+I can improve my process for troubleshooting by splitting the problems before start trying to solve them. Because I realized that sometimes I waste time because I tried to solve everything at once.
+
